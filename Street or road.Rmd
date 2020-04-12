@@ -1,0 +1,83 @@
+  
+---
+title: "STAT 184" 
+subtitle: "Street or Road"
+author: "eric weah"
+output: html_notebook
+---
+
+
+
+
+
+```{r}
+# clean up workspace environment
+rm(list = ls())
+# all packages used for the assignment
+library(mosaic)
+library(tidyverse)
+library(DataComputing)
+library(tidyverse)
+library(tidyr)
+library(lubridate)
+```
+
+
+
+```{r}
+Addresses <- read_csv("http://tiny.cc/dcf/street-addresses.csv")
+Sample <- 
+  Addresses %>%
+  sample_n(size = 50)
+
+```
+
+```{r}
+Matches <- 
+  Sample %>%
+  filter(grepl(pattern = "PO", address))
+
+```
+
+```{r}
+Dont <- 
+  Sample %>%
+  filter( ! grepl(pattern = "PO", address))
+```
+
+```{r}
+pattern <- "BOX\\s+(\\d+)"
+
+Matches <- 
+  Sample %>% 
+  filter(grepl(pattern, address))
+
+Dont <-
+  Sample %>%
+  filter( ! grepl(pattern, address))
+Dont
+```
+
+```{r}
+BoxNumbers <- 
+  Sample %>%
+  filter(grepl(pattern, address)) %>%
+  tidyr::extract(address, into = "boxnum", regex = pattern)
+
+```
+Your turn: Read the following R statements. Next to each line, give a short explanation of what the line contributes to the task. For each of the regexes, explain in simple everyday language what pattern is being matched.
+```{r}
+pattern <- "(ST|RD|ROAD|CIRCLE)" # looking for a pattern street or road names
+LeftOvers <- #saves everything in a leftOvers table
+  Addresses %>% # pulls data from source
+  filter( ! grepl(pattern, address),# filters out what we dont want to see
+          ! grepl("\\sAPT|UNIT\\s[\\d]+$", address), # looking for anything with apartments 
+          ! grepl(" BOX ", address)
+          )
+
+
+```
+
+```{r}
+m
+```
