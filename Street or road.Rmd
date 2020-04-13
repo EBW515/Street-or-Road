@@ -68,20 +68,48 @@ BoxNumbers <-
 
 ```
 
+```{r}
+Addresses <- read_csv("http://tiny.cc/dcf/street-addresses.csv")
+Sample <- 
+  Addresses %>%
+  sample_n(size = 50)
 
+```
 Your turn: Read the following R statements. Next to each line, give a short explanation of what the line contributes to the task. For each of the regexes, explain in simple everyday language what pattern is being matched.
 ```{r}
-pattern <- "(ST|RD|ROAD|BOX|CIRCLE|LN|COURT|POINT|PKWY|SQUARE|PLACE|PATH)" # looking for a pattern street or road names
-LeftOvers <- #saves everything in a leftOvers table
-  Addresses %>% # pulls data from source
-  filter( ! grepl(pattern, address),# filters out what we dont want to see
-          ! grepl("\\sAPT|UNIT\\s[\\d]+$", address), # looking for anything with apartments 
+pattern <- "(ST|RD|ROAD)" # looking for a pattern street or road names
+LeftOvers <-## variable name for table data
+  Addresses %>% # pulls data from data table
+  filter( ! grepl(pattern, address),# filters out what we dont want to see from pattern
+          ! grepl("\\sAPT|UNIT\\s[\\d]+$", address), # looking for anything with apartments or unit 
           ! grepl(" BOX ", address)
           )
 
-
+print(LeftOvers)
 ```
 
 ```{r}
+Matches<-
+  Addresses%>%
+  filter(!grepl(pattern = "PO", address),!grepl("POINT", address), !grepl("COURT", address),!grepl("PKWY",address),!grepl("PLACE",address),!grepl("PATH", address),!grepl("ROAD", address),!grepl("LN",address), !grepl("CIRCLE", address),! grepl("CT", address), !grepl("LANDING",address),!grepl("HEIGHTS", address))
+Matches
 
+```
+```{r}
+DescOrder<- Matches%>%
+  group_by(address)%>%
+  summarise(total=n())%>%
+  arrange(desc(total))
+DescOrder
+```
+```{r}
+PopularityOfAdd<-
+  DescOrder%>%
+  filter(rank(desc(total))<=10)
+PopularityOfAdd
+```
+```{r}
+ggplot(data = PopularityOfAdd, aes(x=reorder(Addresses,-total),y=total))+
+  geom_bar(stat = 'identity',position = 'stack', width =.9)
+```
 ```
