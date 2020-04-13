@@ -22,7 +22,11 @@ library(tidyr)
 library(lubridate)
 ```
 
-
+```{r}
+download.file(url="http://tiny.cc/dcf/CMS_ProvidersSimple.rds",
+              destfile = "YourNameForTheFile.rds")
+DataTable <- readRDS("YourNameForTheFile.rds")
+```
 
 ```{r}
 Addresses <- read_csv("http://tiny.cc/dcf/street-addresses.csv")
@@ -56,18 +60,18 @@ Dont <-
   Sample %>%
   filter( ! grepl(pattern, address))
 Dont
-```
 
-```{r}
 BoxNumbers <- 
   Sample %>%
   filter(grepl(pattern, address)) %>%
   tidyr::extract(address, into = "boxnum", regex = pattern)
 
 ```
+
+
 Your turn: Read the following R statements. Next to each line, give a short explanation of what the line contributes to the task. For each of the regexes, explain in simple everyday language what pattern is being matched.
 ```{r}
-pattern <- "(ST|RD|ROAD|CIRCLE)" # looking for a pattern street or road names
+pattern <- "(ST|RD|ROAD|BOX|CIRCLE|LN|COURT|POINT|PKWY|SQUARE|PLACE|PATH)" # looking for a pattern street or road names
 LeftOvers <- #saves everything in a leftOvers table
   Addresses %>% # pulls data from source
   filter( ! grepl(pattern, address),# filters out what we dont want to see
@@ -79,5 +83,5 @@ LeftOvers <- #saves everything in a leftOvers table
 ```
 
 ```{r}
-m
+
 ```
