@@ -67,7 +67,6 @@ BoxNumbers <-
   tidyr::extract(address, into = "boxnum", regex = pattern)
 
 ```
-
 ```{r}
 Addresses <- read_csv("http://tiny.cc/dcf/street-addresses.csv")
 Sample <- 
@@ -76,40 +75,45 @@ Sample <-
 
 ```
 Your turn: Read the following R statements. Next to each line, give a short explanation of what the line contributes to the task. For each of the regexes, explain in simple everyday language what pattern is being matched.
+
 ```{r}
-pattern <- "(ST|RD|ROAD)" # looking for a pattern street or road names
-LeftOvers <-## variable name for table data
-  Addresses %>% # pulls data from data table
-  filter( ! grepl(pattern, address),# filters out what we dont want to see from pattern
-          ! grepl("\\sAPT|UNIT\\s[\\d]+$", address), # looking for anything with apartments or unit 
-          ! grepl(" BOX ", address)
+pattern <- "( PO|POINT|COURT|PKWY|PLACE|PATH|ROAD|LN|CIRCLE|CT|LANDING|HEIGHTS)" ## creates a pattern for leftovers
+LeftOvers <-  ##variable name for data table  
+  Addresses %>% ## pulls from the data data
+  filter( ! grepl(pattern, address), ##removes values from pattern 
+          ! grepl("\\sAPT|UNIT\\s[\\d]+$", address), ## filter apt or unit that are found at the end
+          ! grepl(" BOX ", address)## filter the box cases both begining and end
           )
-
-print(LeftOvers)
 ```
 
 ```{r}
-Matches<-
-  Addresses%>%
-  filter(!grepl(pattern = "PO", address),!grepl("POINT", address), !grepl("COURT", address),!grepl("PKWY",address),!grepl("PLACE",address),!grepl("PATH", address),!grepl("ROAD", address),!grepl("LN",address), !grepl("CIRCLE", address),! grepl("CT", address), !grepl("LANDING",address),!grepl("HEIGHTS", address))
-Matches
-
+Matches <-
+  Addresses %>%
+  filter(!grepl(pattern = "PO", address),
+         ! grepl("PO", address),
+         ! grepl("POINT", address),
+         ! grepl("COURT", address),
+         ! grepl("PKWY", address),
+         ! grepl("PLACE", address),
+         ! grepl("PATH", address),
+         ! grepl("ROAD", address),
+         ! grepl("LN", address),
+         ! grepl("CIRCLE", address),
+         ! grepl("CT", address),
+         ! grepl("LANDING", address),
+         ! grepl("HEIGHTS", address)
+         )
 ```
+
 ```{r}
-DescOrder<- Matches%>%
-  group_by(address)%>%
-  summarise(total=n())%>%
-  arrange(desc(total))
+DescOrder <- Matches %>% group_by(address) %>% summarise(total = n()) %>% arrange(desc(total))
 DescOrder
 ```
 ```{r}
-PopularityOfAdd<-
-  DescOrder%>%
-  filter(rank(desc(total))<=10)
-PopularityOfAdd
+PopOfAdd <- PopMatches %>% filter(rank(desc(total)) <= 10)
+PopOfAdd
 ```
+### GGPLOT
 ```{r}
-ggplot(data = PopularityOfAdd, aes(x=reorder(Addresses,-total),y=total))+
-  geom_bar(stat = 'identity',position = 'stack', width =.9)
-```
+ggplot(data = TopAddresses, aes(x = reorder(address,-total), y = total)) + geom_bar(stat = 'identity', position = 'stack', width = 0.9)
 ```
