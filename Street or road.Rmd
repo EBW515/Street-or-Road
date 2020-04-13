@@ -110,10 +110,10 @@ DescOrder <- Matches %>% group_by(address) %>% summarise(total = n()) %>% arrang
 DescOrder
 ```
 ```{r}
-PopOfAdd <- PopMatches %>% filter(rank(desc(total)) <= 10)
+PopOfAdd <- DescOrder %>% filter(rank(desc(total)) <= 10)
 PopOfAdd
 ```
 ### GGPLOT
 ```{r}
-ggplot(data = TopAddresses, aes(x = reorder(address,-total), y = total)) + geom_bar(stat = 'identity', position = 'stack', width = 0.9)
+ggplot(data = PopOfAdd, aes(x = reorder(address,-total), y = total)) + geom_bar(stat = 'identity', position = 'stack', width = 0.1)
 ```
